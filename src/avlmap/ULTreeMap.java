@@ -52,11 +52,6 @@ public class ULTreeMap<K,V> implements java.lang.Cloneable{
     }
 
     public void insert(K key, V value) throws DuplicateKeyException{
-        // Throw NullPointerException if the key is null
-        if (key == null) {
-            throw new NullPointerException("Key cannot be null");
-        }
-
         // Call the private recursive insert method
         root = insert(root, key, value);
     }
@@ -118,14 +113,11 @@ public class ULTreeMap<K,V> implements java.lang.Cloneable{
         root = erase(root, key);
     }
     private Node erase(Node node, K key) {
-        if (node == null) {
-            return null;
-        }
         int cmp = compare(key, node.key);
+
         Node result = null;
         if (cmp < 0) {
-            node
-                    .left = erase(node.left, key);
+            node.left = erase(node.left, key);
         } else if (cmp > 0) {
             node.right = erase(node.right, key);
         } else {
