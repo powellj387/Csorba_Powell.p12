@@ -7,8 +7,17 @@ public class ULTreeMap<K,V> implements Cloneable,Iterable<ULTreeMap.Mapping<K,V>
 
     public static class Mapping<K,V>
     {
-        public K getKey(){return this.getKey();};
-        public V getValue(){return this.getValue();};
+        K nodekey;
+        V nodevalue;
+
+
+        public K getKey() {
+            return nodekey;
+        }
+
+        public V getValue() {
+            return nodevalue;
+        }
     }
 
     private class Node {
@@ -256,7 +265,7 @@ public class ULTreeMap<K,V> implements Cloneable,Iterable<ULTreeMap.Mapping<K,V>
                 }
                 Node lastAccessed = current;
                 current = successor(current); // Implement 'successor' logic
-                return new ULTreeMap.Mapping<>(lastAccessed.key, lastAccessed.value); // This should work now
+                return new ULTreeMap.Mapping<>(); // This should work now
             }
 
             // You don't need to implement the 'remove' method, just throw an UnsupportedOperationException
