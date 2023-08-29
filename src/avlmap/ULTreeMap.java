@@ -81,9 +81,6 @@ public class ULTreeMap<K,V> implements java.lang.Cloneable{
     }
 
     public void put(K key, V value){
-        if (key == null) {
-            throw new NullPointerException("Key cannot be null");
-        }
         root = put(root, key, value);
     }
 
