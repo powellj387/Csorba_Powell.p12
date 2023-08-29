@@ -3,6 +3,13 @@ package avlmap;
 
 import java.util.Comparator;
 public class ULTreeMap<K,V> implements java.lang.Cloneable{
+
+    public static class Mapping<K,V>
+    {
+        public K getKey(){return null;};
+        public V getValue(){return null;};
+    }
+
     private class Node {
         K key;
         V value;
@@ -109,6 +116,10 @@ public class ULTreeMap<K,V> implements java.lang.Cloneable{
         return result;
     }
 
+    public int heightOfKey(K key){
+        return 0;
+    }
+
     public void erase(K key){
         root = erase(root, key);
     }
@@ -190,5 +201,9 @@ public class ULTreeMap<K,V> implements java.lang.Cloneable{
         }
 
         return result;
+    }
+
+    public java.util.Iterator<ULTreeMap.Mapping<K,V>> iterator(){
+        return null;
     }
 }
