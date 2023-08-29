@@ -4,10 +4,11 @@ package avlmap;
 import java.util.Comparator;
 
 public class ULTreeMap<K,V> implements Cloneable,Iterable<ULTreeMap.Mapping<K,V>>{
+
     public static class Mapping<K,V>
     {
-        public K getKey(){return null;};
-        public V getValue(){return null;};
+        public K getKey(){return this.getKey();};
+        public V getValue(){return this.getValue();};
     }
 
     private class Node {
@@ -117,7 +118,7 @@ public class ULTreeMap<K,V> implements Cloneable,Iterable<ULTreeMap.Mapping<K,V>
     }
 
     public int heightOfKey(K key){
-        return -1;
+        return 0;
     }
 
     public void erase(K key){
