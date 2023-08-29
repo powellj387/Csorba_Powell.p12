@@ -16,12 +16,14 @@ public class ULTreeMap<K,V> implements Cloneable,Iterable<ULTreeMap.Mapping<K,V>
         V value;
         Node left;
         Node right;
+        Node parent;
 
         Node(K key, V value) {
             this.key = key;
             this.value = value;
             this.left = null;
             this.right = null;
+            this.parent = null;
         }
     }
 
@@ -73,8 +75,10 @@ public class ULTreeMap<K,V> implements Cloneable,Iterable<ULTreeMap.Mapping<K,V>
             int cmp = compare(key, node.key);
             if (cmp < 0) {
                 node.left = insert(node.left, key, value);
+                node.left.parent = node;
             } else if (cmp > 0) {
                 node.right = insert(node.right, key, value);
+                node.right.parent = node;
             } else {
                 throw new DuplicateKeyException("Duplicate key found: " + key);
             }
@@ -252,7 +256,7 @@ public class ULTreeMap<K,V> implements Cloneable,Iterable<ULTreeMap.Mapping<K,V>
                 }
                 Node lastAccessed = current;
                 current = successor(current); // Implement 'successor' logic
-                return new ULTreeMap.Mapping<>(lastAccessed.key, lastAccessed.value);
+                return new ULTreeMap.Mapping<>(lastAccessed.key, lastAccessed.value); // This should work now
             }
 
             // You don't need to implement the 'remove' method, just throw an UnsupportedOperationException
