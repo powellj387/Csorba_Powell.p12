@@ -7,17 +7,10 @@ public class ULTreeMap<K,V> implements Cloneable,Iterable<ULTreeMap.Mapping<K,V>
 
     public static class Mapping<K,V>
     {
-        K nodekey;
-        V nodevalue;
-
-
-        public K getKey() {
-            return nodekey;
-        }
-
-        public V getValue() {
-            return nodevalue;
-        }
+        K nodeKey;
+        V nodeValue;
+        public K getKey(){return nodeKey;};
+        public V getValue(){return nodeValue;};
     }
 
     private class Node {
