@@ -2,8 +2,8 @@
 package avlmap;
 
 import java.util.Comparator;
-public class ULTreeMap<K,V> implements java.lang.Cloneable{
 
+public class ULTreeMap<K,V> implements Cloneable,Iterable<ULTreeMap.Mapping<K,V>>{
     public static class Mapping<K,V>
     {
         public K getKey(){return null;};
