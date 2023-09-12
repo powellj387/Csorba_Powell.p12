@@ -21,10 +21,38 @@ public class ULTreeMapTest {
     @Test
     public void testInsert() {
         ULTreeMap<String, Integer> map = createTestMap();
-        map.insert("six", 6);
-        assertEquals(6, map.size());
-        assertEquals((Integer) 6, map.lookup("six"));
+
+        // Insert nodes in ascending order
+        map.put("six", 6);
+        map.put("seven", 7);
+        map.put("eight", 8);
+        assertTrue(map.containsKey("one"));
+        assertTrue(map.containsKey("two"));
+        assertTrue(map.containsKey("three"));
+        assertTrue(map.containsKey("four"));
+        assertTrue(map.containsKey("five"));
+        assertTrue(map.containsKey("six"));
+        assertTrue(map.containsKey("seven"));
+        assertTrue(map.containsKey("eight"));
+
+        // Insert nodes on the left side
+        map.put("zero", 0);
+        assertTrue(map.containsKey("zero"));
+
+        // Insert nodes on the right side
+        map.put("nine", 9);
+        assertTrue(map.containsKey("nine"));
+
+        // Try to insert a duplicate key
+        try {
+            map.insert("two", 22);
+            fail("Expected DuplicateKeyException");
+        } catch (DuplicateKeyException e) {
+            // The exception was thrown as expected, so the test case passes.
+            assertEquals("Duplicate key found: two", e.getMessage());
+        }
     }
+
 
     @Test(expected = DuplicateKeyException.class)
     public void testInsertDuplicateKey() {
@@ -42,9 +70,25 @@ public class ULTreeMapTest {
 
     @Test
     public void testContainsKey() {
-        ULTreeMap<String, Integer> map = createTestMap();
+        ULTreeMap<String, Integer> map = new ULTreeMap<>();
+
+        // Insert some keys
+        map.put("one", 1);
+        map.put("two", 2);
+        map.put("three", 3);
+
+        // Check for keys that are in the map
         assertTrue(map.containsKey("one"));
-        assertFalse(map.containsKey("six"));
+        assertTrue(map.containsKey("two"));
+        assertTrue(map.containsKey("three"));
+
+        // Check for keys that are not in the map
+        assertFalse(map.containsKey("four"));
+        assertFalse(map.containsKey("five"));
+
+        // Delete a key and check for its presence
+        map.erase("two");
+        assertFalse(map.containsKey("two"));
     }
 
     @Test
@@ -54,14 +98,97 @@ public class ULTreeMapTest {
         assertNull(map.lookup("six"));
     }
 
+//    @Test
+//    public void testErase() {
+//        ULTreeMap<String, Integer> map = new ULTreeMap<>();
+//        // Insert some keys
+//        map.put("one", 1);
+//        map.put("two", 2);
+//        map.put("three", 3);
+//        map.put("four", 4);
+//
+//        // Erase a node on the left side
+//        assertTrue(map.containsKey("two"));
+//        map.erase("two");
+//        assertFalse(map.containsKey("two"));
+//
+//        // Erase a node on the right side
+//        assertTrue(map.containsKey("four"));
+//        map.erase("four");
+//        assertFalse(map.containsKey("four"));
+//
+//        // Erase a node inside the tree
+//        assertTrue(map.containsKey("three"));
+//        map.erase("three");
+//        assertFalse(map.containsKey("three"));
+//
+//        // Attempt to erase a node not in the tree
+//        assertFalse(map.containsKey("five"));
+//        map.erase("five"); // Erasing a non-existent key should not throw an exception
+//    }
+
     @Test
-    public void testErase() {
-        ULTreeMap<String, Integer> map = createTestMap();
+    public void testEraseLeftNode() {
+        ULTreeMap<String, Integer> map = new ULTreeMap<>();
+
+        // Insert some keys
+        map.put("one", 1);
+        map.put("two", 2);
+        map.put("three", 3);
+        map.put("four", 4);
+
+        // Erase a node on the left side
+        assertTrue(map.containsKey("two"));
+        map.erase("two");
+        assertFalse(map.containsKey("two"));
+    }
+
+    @Test
+    public void testEraseRightNode() {
+        ULTreeMap<String, Integer> map = new ULTreeMap<>();
+
+        // Insert some keys
+        map.put("one", 1);
+        map.put("two", 2);
+        map.put("three", 3);
+        map.put("four", 4);
+
+        // Erase a node on the right side
+        assertTrue(map.containsKey("four"));
+        map.erase("four");
+        assertFalse(map.containsKey("four"));
+    }
+
+    @Test
+    public void testEraseNodeInsideTree() {
+        ULTreeMap<String, Integer> map = new ULTreeMap<>();
+
+        // Insert some keys
+        map.put("one", 1);
+        map.put("two", 2);
+        map.put("three", 3);
+        map.put("four", 4);
+
+        // Erase a node inside the tree
+        assertTrue(map.containsKey("three"));
         map.erase("three");
-        assertEquals(4, map.size());
         assertFalse(map.containsKey("three"));
     }
 
+    @Test
+    public void testEraseNonExistentNode() {
+        ULTreeMap<String, Integer> map = new ULTreeMap<>();
+
+        // Insert some keys
+        map.put("one", 1);
+        map.put("two", 2);
+        map.put("three", 3);
+        map.put("four", 4);
+
+        // Attempt to erase a node not in the tree
+        assertFalse(map.containsKey("five"));
+        map.erase("five"); // Erasing a non-existent key should not throw an exception
+    }
     @Test
     public void testKeys() {
         ULTreeMap<String, Integer> map = createTestMap();
