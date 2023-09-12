@@ -97,10 +97,11 @@ public class ULTreeMapTest {
         assertEquals((Integer) 1, map.lookup("one"));
         assertNull(map.lookup("six"));
     }
-
+//  Won't pass test when in a collective but will pass the test when broken up
 //    @Test
 //    public void testErase() {
 //        ULTreeMap<String, Integer> map = new ULTreeMap<>();
+//
 //        // Insert some keys
 //        map.put("one", 1);
 //        map.put("two", 2);
