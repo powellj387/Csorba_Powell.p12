@@ -9,8 +9,13 @@ public class ULTreeMap<K,V> implements Cloneable,Iterable<ULTreeMap.Mapping<K,V>
     {
         K nodeKey;
         V nodeValue;
+        public Mapping(K key, V value) {
+            this.nodeKey = key;
+            this.nodeValue = value;
+        }
         public K getKey(){return nodeKey;};
         public V getValue(){return nodeValue;};
+
     }
 
     private class Node {
@@ -232,6 +237,8 @@ public class ULTreeMap<K,V> implements Cloneable,Iterable<ULTreeMap.Mapping<K,V>
         return new java.util.Iterator<ULTreeMap.Mapping<K, V>>() {
             private Node current = findMin(root); // Start at the leftmost node
             private int expectedModCount = size; // Use 'size' instead of 'modCount'
+            private Node lastAccessed;
+            private boolean canRemove = false;
 
             private Node findMin(Node node) {
                 while (node != null && node.left != null) {
@@ -274,9 +281,18 @@ public class ULTreeMap<K,V> implements Cloneable,Iterable<ULTreeMap.Mapping<K,V>
                 if (!hasNext()) {
                     throw new java.util.NoSuchElementException();
                 }
-                Node lastAccessed = current;
-                current = successor(current); // Implement 'successor' logic
-                return new ULTreeMap.Mapping<>(); // This should work now
+                lastAccessed = current;
+                canRemove = true;
+                ULTreeMap.Mapping<K, V> mapping = new ULTreeMap.Mapping<>(lastAccessed.key, lastAccessed.value);
+                if (current.right != null) {
+                    current = findMin(current.right);
+                } else {
+                    while (current.parent != null && current == current.parent.right) {
+                        current = current.parent;
+                    }
+                    current = current.parent;
+                }
+                return mapping;
             }
 
             // You don't need to implement the 'remove' method, just throw an UnsupportedOperationException
