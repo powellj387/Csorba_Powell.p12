@@ -233,12 +233,10 @@ public class ULTreeMap<K,V> implements Cloneable,Iterable<ULTreeMap.Mapping<K,V>
         return result;
     }
 
-    public java.util.Iterator<ULTreeMap.Mapping<K,V>> iterator(){
+    public java.util.Iterator<ULTreeMap.Mapping<K,V>> iterator() {
         return new java.util.Iterator<ULTreeMap.Mapping<K, V>>() {
-            private Node current = findMin(root); // Start at the leftmost node
-            private int expectedModCount = size; // Use 'size' instead of 'modCount'
-            private Node lastAccessed;
-            private boolean canRemove = false;
+            private Node current = findMin(root);
+            private int expectedModCount = size;
 
             private Node findMin(Node node) {
                 while (node != null && node.left != null) {
@@ -247,55 +245,41 @@ public class ULTreeMap<K,V> implements Cloneable,Iterable<ULTreeMap.Mapping<K,V>
                 return node;
             }
 
-            private Node successor(Node node) {
-                if (node == null) {
-                    return null;
-                }
-
-                // If the node has a right child, the successor is the leftmost node in the right subtree
-                if (node.right != null) {
-                    Node min = node.right;
-                    while (min.left != null) {
-                        min = min.left;
-                    }
-                    return min;
-                }
-
-                // If the node doesn't have a right child, traverse up the tree until you find a parent whose left child is the current node
-                Node parent = node.parent;
-                while (parent != null && node == parent.right) {
-                    node = parent;
-                    parent = parent.parent;
-                }
-                return parent;
-            }
-
             public boolean hasNext() {
+                if (expectedModCount != size) {
+                    throw new java.util.ConcurrentModificationException();
+                }
                 return current != null;
             }
 
             public ULTreeMap.Mapping<K, V> next() {
-                if (expectedModCount != size) {
-                    throw new java.util.ConcurrentModificationException();
-                }
                 if (!hasNext()) {
                     throw new java.util.NoSuchElementException();
                 }
-                lastAccessed = current;
-                canRemove = true;
-                ULTreeMap.Mapping<K, V> mapping = new ULTreeMap.Mapping<>(lastAccessed.key, lastAccessed.value);
-                if (current.right != null) {
-                    current = findMin(current.right);
-                } else {
-                    while (current.parent != null && current == current.parent.right) {
-                        current = current.parent;
-                    }
-                    current = current.parent;
-                }
-                return mapping;
+
+                Node nextNode = current;
+                current = findSuccessor(current);
+
+                return new ULTreeMap.Mapping<>(nextNode.key, nextNode.value);
             }
 
-            // You don't need to implement the 'remove' method, just throw an UnsupportedOperationException
+            private Node findSuccessor(Node node) {
+                if (node == null) {
+                    return null;
+                }
+
+                if (node.right != null) {
+                    return findMin(node.right);
+                } else {
+                    Node parent = node.parent;
+                    while (parent != null && node == parent.right) {
+                        node = parent;
+                        parent = parent.parent;
+                    }
+                    return parent;
+                }
+            }
+
             public void remove() {
                 throw new UnsupportedOperationException();
             }

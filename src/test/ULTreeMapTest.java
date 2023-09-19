@@ -97,36 +97,6 @@ public class ULTreeMapTest {
         assertEquals((Integer) 1, map.lookup("one"));
         assertNull(map.lookup("six"));
     }
-//  Won't pass test when in a collective but will pass the test when broken up
-//    @Test
-//    public void testErase() {
-//        ULTreeMap<String, Integer> map = new ULTreeMap<>();
-//
-//        // Insert some keys
-//        map.put("one", 1);
-//        map.put("two", 2);
-//        map.put("three", 3);
-//        map.put("four", 4);
-//
-//        // Erase a node on the left side
-//        assertTrue(map.containsKey("two"));
-//        map.erase("two");
-//        assertFalse(map.containsKey("two"));
-//
-//        // Erase a node on the right side
-//        assertTrue(map.containsKey("four"));
-//        map.erase("four");
-//        assertFalse(map.containsKey("four"));
-//
-//        // Erase a node inside the tree
-//        assertTrue(map.containsKey("three"));
-//        map.erase("three");
-//        assertFalse(map.containsKey("three"));
-//
-//        // Attempt to erase a node not in the tree
-//        assertFalse(map.containsKey("five"));
-//        map.erase("five"); // Erasing a non-existent key should not throw an exception
-//    }
 
     @Test
     public void testEraseLeftNode() {
