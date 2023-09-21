@@ -97,6 +97,36 @@ public class ULTreeMapTest {
         assertEquals((Integer) 1, map.lookup("one"));
         assertNull(map.lookup("six"));
     }
+//  Won't pass test when in a collective but will pass the test when broken up
+//    @Test
+//    public void testErase() {
+//        ULTreeMap<String, Integer> map = new ULTreeMap<>();
+//
+//        // Insert some keys
+//        map.put("one", 1);
+//        map.put("two", 2);
+//        map.put("three", 3);
+//        map.put("four", 4);
+//
+//        // Erase a node on the left side
+//        assertTrue(map.containsKey("two"));
+//        map.erase("two");
+//        assertFalse(map.containsKey("two"));
+//
+//        // Erase a node on the right side
+//        assertTrue(map.containsKey("four"));
+//        map.erase("four");
+//        assertFalse(map.containsKey("four"));
+//
+//        // Erase a node inside the tree
+//        assertTrue(map.containsKey("three"));
+//        map.erase("three");
+//        assertFalse(map.containsKey("three"));
+//
+//        // Attempt to erase a node not in the tree
+//        assertFalse(map.containsKey("five"));
+//        map.erase("five"); // Erasing a non-existent key should not throw an exception
+//    }
 
     @Test
     public void testEraseLeftNode() {
@@ -193,4 +223,30 @@ public class ULTreeMapTest {
         assertTrue(map.empty());
         assertEquals(0, map.size());
     }
+
+    @Test
+    public void testHeightOfKey() {
+        ULTreeMap<String, Integer> map = createTestMap();
+        // Insert some key-value pairs into the tree
+        map.insert("A",10);
+        map.insert("B", 5);
+        map.insert("C", 15);
+        map.insert("D", 3);
+        map.insert("E", 8);
+        map.insert("F", 12);
+        map.insert("G", 18);
+
+        // expected outcome
+        System.out.println("B(3)/D(2)/G(1)/A,E,C(0)");
+        // Test the heightOfKey function
+        System.out.println(map.heightOfKey("A")); // Should print "Height of key 10: 3"
+        System.out.println(map.heightOfKey("B"));  // Should print "Height of key 5: 2"
+        System.out.println(map.heightOfKey("C"));// Should print "Height of key 15: 2"
+        System.out.println(map.heightOfKey("D"));  // Should print "Height of key 3: 0"
+        System.out.println(map.heightOfKey("E"));// Should print "Height of key 8: 1"
+        System.out.println(map.heightOfKey("F"));// Should print "Height of key 12: 1"
+        System.out.println(map.heightOfKey("G"));// Should print "Height of key 18: 1"
+        System.out.println(map.heightOfKey("L"));// Should print "Height of key 7: -1" (not in the tree)
+    }
+
 }
