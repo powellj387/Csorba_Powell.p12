@@ -227,26 +227,13 @@ public class ULTreeMapTest {
     @Test
     public void testHeightOfKey() {
         ULTreeMap<String, Integer> map = createTestMap();
-        // Insert some key-value pairs into the tree
-        map.insert("A",10);
-        map.insert("B", 5);
-        map.insert("C", 15);
-        map.insert("D", 3);
-        map.insert("E", 8);
-        map.insert("F", 12);
-        map.insert("G", 18);
 
-        // expected outcome
-        System.out.println("B(3)/D(2)/G(1)/A,E,C(0)");
         // Test the heightOfKey function
-        System.out.println(map.heightOfKey("A")); // Should print "Height of key 10: 3"
-        System.out.println(map.heightOfKey("B"));  // Should print "Height of key 5: 2"
-        System.out.println(map.heightOfKey("C"));// Should print "Height of key 15: 2"
-        System.out.println(map.heightOfKey("D"));  // Should print "Height of key 3: 0"
-        System.out.println(map.heightOfKey("E"));// Should print "Height of key 8: 1"
-        System.out.println(map.heightOfKey("F"));// Should print "Height of key 12: 1"
-        System.out.println(map.heightOfKey("G"));// Should print "Height of key 18: 1"
-        System.out.println(map.heightOfKey("L"));// Should print "Height of key 7: -1" (not in the tree)
+        System.out.println(map.heightOfKey("one"));
+        System.out.println(map.heightOfKey("two"));
+        System.out.println(map.heightOfKey("three"));
+        System.out.println(map.heightOfKey("four"));
+        System.out.println(map.heightOfKey("seven"));//-1 (not in the tree)
     }
 
 }
