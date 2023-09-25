@@ -8,6 +8,80 @@ import avlmap.ULTreeMap;
 
 public class ULTreeMapTest {
 
+    public static void main(String[] args) {
+        // Create a ULTreeMap with a custom comparator for testing
+        ULTreeMap<Integer, String> map = new ULTreeMap<>(Comparator.comparingInt(Integer::intValue));
+
+        // Insert some key-value pairs
+        map.insert(10, "Value 10");
+        map.insert(5, "Value 5");
+        map.insert(15, "Value 15");
+        map.insert(3, "Value 3");
+        map.insert(7, "Value 7");
+
+        // Print the initial state of the map
+        System.out.println("Initial Map:");
+        printMap(map);
+
+        // Test erasing a key that doesn't exist
+        map.erase(20); // Should do nothing
+        System.out.println("After erasing key 20:");
+        printMap(map);
+
+        // Test erasing a leaf node (e.g., key 3)
+        map.erase(3);
+        System.out.println("After erasing key 3:");
+        printMap(map);
+
+        // Test erasing a node with one child (e.g., key 15)
+        map.erase(15);
+        System.out.println("After erasing key 15:");
+        printMap(map);
+
+        // Test erasing a node with two children (e.g., key 5)
+        map.erase(5);
+        System.out.println("After erasing key 5:");
+        printMap(map);
+    }
+
+    // Helper method to print the contents of the map
+    private static void printMap(ULTreeMap<Integer, String> map) {
+        for (ULTreeMap.Mapping<Integer, String> entry : map) {
+            System.out.println(entry.getKey() + " -> " + entry.getValue());
+        }
+        System.out.println("Size: " + map.size());
+        System.out.println();
+    }
+
+    @Test
+    public void testErase() {
+        ULTreeMap<Integer, String> map = new ULTreeMap<>();
+        map.insert(3, "Value 3");
+        map.insert(5, "Value 5");
+        map.insert(7, "Value 7");
+        map.insert(10, "Value 10");
+        map.insert(15, "Value 15");
+
+        // Step-by-step erasure and size check
+        assertEquals(5, map.size());
+
+        map.erase(3);
+        assertEquals(4, map.size());
+
+        map.erase(7);
+        assertEquals(3, map.size());
+
+        map.erase(5);
+        assertEquals(2, map.size());
+
+        map.erase(15);
+        assertEquals(1, map.size());
+
+        map.erase(10);
+        assertEquals(0, map.size());
+    }
+
+
     private ULTreeMap<String, Integer> createTestMap() {
         ULTreeMap<String, Integer> map = new ULTreeMap<>();
         map.put("one", 1);
