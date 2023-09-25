@@ -152,42 +152,37 @@ public class ULTreeMap<K,V> implements Cloneable,Iterable<ULTreeMap.Mapping<K,V>
         return height;
     }
 
-
-    public void erase(K key) {
+    public void erase(K key){
         root = erase(root, key);
     }
     private Node erase(Node node, K key) {
         if (node == null) {
-            // Key not found, no need to update the tree or size
-            return null;
+            return null; // Key not found, return null node
         }
-
         int cmp = compare(key, node.key);
 
+        Node result = null;
         if (cmp < 0) {
             node.left = erase(node.left, key);
             if (node.left != null) {
                 node.left.parent = node; // Update parent pointer of the new left child
             }
-        } else if (cmp > 0) {
-            node.right = erase(node.right, key);
             if (node.right != null) {
                 node.right.parent = node; // Update parent pointer of the new right child
             }
         } else {
-            size--;
             if (node.left == null) {
-                Node result = node.right;
+                size--;
+                result = node.right;
                 if (result != null) {
                     result.parent = node.parent; // Update parent pointer of the replacement node
                 }
-                return result;
             } else if (node.right == null) {
-                Node result = node.left;
+                size--;
+                result = node.left;
                 if (result != null) {
                     result.parent = node.parent; // Update parent pointer of the replacement node
                 }
-                return result;
             } else {
                 Node min = node.right;
                 while (min.left != null) {
@@ -201,8 +196,7 @@ public class ULTreeMap<K,V> implements Cloneable,Iterable<ULTreeMap.Mapping<K,V>
                 }
             }
         }
-
-        return node;
+        return result;
     }
 
     public java.util.Collection<K> keys(){
@@ -325,5 +319,4 @@ public class ULTreeMap<K,V> implements Cloneable,Iterable<ULTreeMap.Mapping<K,V>
             }
         };
     }
-
 }
