@@ -308,6 +308,12 @@ public class ULTreeMapTest {
         System.out.println(map.heightOfKey("three"));
         System.out.println(map.heightOfKey("four"));
         System.out.println(map.heightOfKey("seven"));//-1 (not in the tree)
+
+        assertEquals(0, map.heightOfKey("one"));
+        assertEquals(1,map.heightOfKey("two"));
+        assertEquals(0,map.heightOfKey("three"));
+        System.out.println(map.heightOfKey("four"));
+        assertEquals(-1,map.heightOfKey("seven"));//-1 (not in the tree)
     }
 
 }

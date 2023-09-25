@@ -21,6 +21,7 @@ public class ULTreeMap<K,V> implements Cloneable,Iterable<ULTreeMap.Mapping<K,V>
     private class Node {
         K key;
         V value;
+        int height;
         Node left;
         Node right;
         Node parent;
@@ -82,10 +83,14 @@ public class ULTreeMap<K,V> implements Cloneable,Iterable<ULTreeMap.Mapping<K,V>
             int cmp = compare(key, node.key);
             if (cmp < 0) {
                 node.left = insert(node.left, key, value);
+                updateHeight(node.left);
                 node.left.parent = node;
+                updateHeight(node.left.parent);
             } else if (cmp > 0) {
                 node.right = insert(node.right, key, value);
+                updateHeight(node.right);
                 node.right.parent = node;
+                updateHeight(node.right.parent);
             } else {
                 throw new DuplicateKeyException("Duplicate key found: " + key);
             }
@@ -105,8 +110,10 @@ public class ULTreeMap<K,V> implements Cloneable,Iterable<ULTreeMap.Mapping<K,V>
             int cmp = compare(key, node.key);
             if (cmp < 0) {
                 node.left = put(node.left, key, value);
+                updateHeight(node.left);
             } else if (cmp > 0) {
                 node.right = put(node.right, key, value);
+                updateHeight(node.right);
             } else {
                 node.value = value;
             }
@@ -127,29 +134,113 @@ public class ULTreeMap<K,V> implements Cloneable,Iterable<ULTreeMap.Mapping<K,V>
         return result;
     }
 
+    private int height(Node node) {
+        return node != null ? node.height : -1;
+    }
+
+    private void updateHeight(Node node) {
+        int leftChildHeight = height(node.left);
+        int rightChildHeight = height(node.right);
+        node.height = Math.max(leftChildHeight, rightChildHeight) + 1;
+    }
+
     public int heightOfKey(K key) {
         return heightOfKey(key, root); // Assuming "root" is the root of the AVL tree
     }
 
-
     private int heightOfKey(K key, Node node) {
-        int height;
-
+        int height = 0;
         if (node == null) {
             height = -1; // Key not found
         }else {
-            int leftHeight = heightOfKey(key, node.left);
-            int rightHeight = heightOfKey(key, node.right);
-
             if (compare(key, node.key) == 0) {
-                // Height of the key's node taking the largest of
-                // the children's heights as the one to be used
-                height = Math.max(leftHeight, rightHeight) + 1;
+            // Height of the key's node taking the largest of
+            // the children's heights as the one to be used
+                height = node.height;
+            }else if (compare(key, node.key)>0){
+                height = heightOfKey(key, node.right);
+            }else if (compare(key, node.key)<0){
+                height = heightOfKey(key, node.left);
             }else{
-                height = Math.max(leftHeight, rightHeight); // Height of the largest subtree
+                height = -1;
             }
         }
         return height;
+    }
+
+    private int balanceFactor(Node node) {
+        return height(node.left) - height(node.right);
+    }
+    private Node rotateRight(Node node) {
+        Node leftChild;
+        if (node == null || node.left == null) {
+            leftChild = node;
+        }else {
+            leftChild = node.left;
+
+            node.left = leftChild.right;
+            leftChild.right = node;
+
+            updateHeight(node);
+            updateHeight(leftChild);
+        }
+        return leftChild;
+    }
+    private Node rotateLeft(Node node) {
+        Node rightChild;
+        if (node == null || node.right == null) {
+            rightChild = node;
+        }else {
+            rightChild = node.right;
+
+            node.right = rightChild.left;
+            rightChild.left = node;
+
+            updateHeight(node);
+            updateHeight(rightChild);
+        }
+
+        return rightChild;
+    }
+    private Node rebalance(Node node) {
+        int balanceFactor = balanceFactor(node);
+        Node returnNode = null;
+        //balance factor -2
+        if (balanceFactor < -1) {
+        //balance factor of the right child equal to 0
+            if (balanceFactor(node.right) == 0) {
+                // Rotate right
+                returnNode = rotateRight(node);
+                //balance factor of right child equal to -1
+            } else if(balanceFactor(node.right) == 0){
+                // Rotate right
+                returnNode = rotateRight(node);
+                //balance factor of right child equal to 1
+            }else if(balanceFactor(node.right) == 1){
+                // Double right rotation
+                returnNode = rotateRight(node);
+                returnNode = rotateRight(returnNode);
+            }
+        }
+
+        //Balance factor 2
+        if (balanceFactor > 1) {
+            //balance factor of the right child equal to 0
+            if (balanceFactor(node.left) == 0) { // Case 1
+                // Rotate right
+                returnNode = rotateLeft(node);
+            //balance factor of right child equal to -1
+            } else if (balanceFactor(node.left) == 0) {
+                // Rotate right
+                returnNode = rotateLeft(node);
+            //balance factor of right child equal to 1
+            } else if (balanceFactor(node.left) == 1) {
+                // Double right rotation
+                returnNode = rotateLeft(node);
+                returnNode = rotateLeft(returnNode);
+            }
+        }
+        return returnNode;
     }
 
     public void erase(K key){
@@ -200,7 +291,7 @@ public class ULTreeMap<K,V> implements Cloneable,Iterable<ULTreeMap.Mapping<K,V>
                 }
             }
         }
-
+        rebalance(node);
         return node;
     }
 
